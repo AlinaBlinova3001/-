@@ -1,0 +1,71 @@
+using System;
+
+namespace ConsoleApp8
+{
+    //реализация паттерна adapter
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Driver driver = new Driver();
+            Auto auto = new Auto();
+            //путешествие
+            driver.Travel(auto);
+            //большой груз используем осла
+            Donkey donkey = new Donkey();
+            // используем адаптер
+            ITransport donkeyTransport = new DonkeyToTransportAdapter(donkey);
+            // продолжаем путь по пескам пустыни
+            driver.Travel(donkeyTransport);
+
+            Console.Read();
+        }
+    }
+    interface ITransport
+    {
+        void Drive();
+    }
+    // класс машины
+    class Auto : ITransport
+    {
+        public void Drive()
+        {
+            Console.WriteLine("Машина едет по дороге");
+        }
+    }
+    //класс путешественника
+    class Driver
+    {
+        public void Travel(ITransport transport)
+        {
+            transport.Drive();
+        }
+    }
+    // интерфейс животного
+    interface IAnimal
+    {
+        void Move();
+    }
+    // класс осёл
+    class Donkey : IAnimal
+    {
+        public void Move()
+        {
+            Console.WriteLine("Осел тащит огромный груз");
+        }
+    }
+    // Адаптер от Donkey к ITransport
+    class DonkeyToTransportAdapter : ITransport
+    {
+        Donkey donkey;
+        public DonkeyToTransportAdapter(Donkey c)
+        {
+            donkey = c;
+        }
+
+        public void Drive()
+        {
+            donkey.Move();
+        }
+    }
+}
